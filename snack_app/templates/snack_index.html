@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snack Suggestions</title>
+</head>
+<body>
+    <h1>New Snack Ideas</h1>
+    <p>Logged in as: <a href='/users/{{request.session.user_id}}'>{{request.session.user_email}}</a></p>
+    <a href='/logout'>Logout</a>
+
+    {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+    <form action='/snacks/create_idea' method='POST'>
+    {% csrf_token %}
+        <h1>Post a new idea:</h1>
+        <p>Snack title:
+            <input type='text' name='title'>
+        </p>
+        <textarea name='description' rows='4' cols='50' placeholder='Enter your text here...'></textarea><br>
+        <input type='submit' value='Post Idea'>
+    </form>
+
+    <h1>Other ideas</h1>
+    {% for idea in ideas %}
+    <p><a href='/snacks/{{idea.id}}'>{{idea.title}}</a></p>
+    <p>by: <a href='/users/{{idea.user.id}}'>{{idea.user.first_name}} {{idea.user.last_name}}</a></p>
+    <p>({{idea.user_likes.count}} Likes, {{idea.user_dislikes.count}} Dislikes)</p>
+    {% endfor %}
+    
+</body>
+</html>

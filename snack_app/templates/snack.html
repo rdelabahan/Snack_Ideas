@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{snack.title}}</title>
+</head>
+<body>
+    <h1>{{snack.title}}</h1>
+    <p>Logged in as: <a href='/users/{{request.session.user_id}}'>{{request.session.user_email}}</a></p>
+    <a href='/logout'>Logout</a><br><br>
+    
+    <h2>Description:</h2>
+    <p>{{snack.description}}</p>
+    {% if this_user not in snack.user_likes.all and this_user not in snack.user_dislikes.all %}
+    <a href='/snacks/{{snack.id}}/like'>Like</a>
+    <a href='/snacks/{{snack.id}}/dislike'>Dislike</a>
+    {% elif this_user not in snack.user_likes.all %}
+    <a href='/snacks/{{snack.id}}/like'>Like</a>
+    {% else %}
+    <a href='/snacks/{{snack.id}}/dislike'>Dislike</a>
+    {% endif %}
+
+    {% if this_user.id == snack.user.id %}
+    <a href='/snacks/{{snack.id}}/delete'>Delete</a>
+    {% endif %}
+
+    <h3>Users who like:</h3>
+    {% for user in snack.user_likes.all %}
+    <p><a href='/users/{{user.id}}'>{{user.first_name}} {{user.last_name}}</a></p>
+    {% endfor %}
+
+    <h3>Users who dislike:</h3>
+    {% for user in snack.user_dislikes.all %}
+    <p><a href='/users/{{user.id}}'>{{user.first_name}} {{user.last_name}}</a></p>
+    {% endfor %}
+
+</body>
+</html>
